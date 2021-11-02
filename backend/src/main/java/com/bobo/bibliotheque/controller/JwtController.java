@@ -1,15 +1,13 @@
 package com.bobo.bibliotheque.controller;
 
 import com.bobo.bibliotheque.jwt.JwtResponse;
-import com.bobo.bibliotheque.jwt.Jwtutils;
+import com.bobo.bibliotheque.jwt.JwtUtils;
 import com.bobo.bibliotheque.configuration.MyUserDetailService;
 import com.bobo.bibliotheque.jwt.JwtRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +22,7 @@ public class JwtController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private Jwtutils jwtutils;
+    private JwtUtils jwtutils;
 
     @Autowired
     private MyUserDetailService service;
@@ -34,7 +32,8 @@ public class JwtController {
                                                       HttpServletResponse response) throws Exception {
 
         authenticate(request.getEmail(), request.getPassword());
-        MyUserDetailService.UserPrincipal principal = (MyUserDetailService.UserPrincipal) service.loadUserByUsername(request.getEmail());
+        MyUserDetailService.UserPrincipal principal =
+                (MyUserDetailService.UserPrincipal) service.loadUserByUsername(request.getEmail());
 
         String token = jwtutils.generateToken(principal);
 
@@ -47,10 +46,7 @@ public class JwtController {
         ));
     }
 
-
-
     private void authenticate(String email, String password) {
-
         this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }
 

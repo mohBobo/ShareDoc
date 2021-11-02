@@ -1,5 +1,6 @@
 package com.bobo.bibliotheque.controller;
 
+import com.bobo.bibliotheque.configuration.MyUserDetailService;
 import com.bobo.bibliotheque.repository.BookRepository;
 import com.bobo.bibliotheque.enumerer.BookStatus;
 import com.bobo.bibliotheque.entities.Category;
@@ -12,9 +13,11 @@ import com.bobo.bibliotheque.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,9 +36,20 @@ public class BookController {
     @Autowired
     private BorrowRepository borrowRepository;
 
+
+    public static Integer getUserConnectedId(Principal principal) {
+        if (!(principal instanceof UsernamePasswordAuthenticationToken)) {
+            throw new RuntimeException("User not found");
+        }
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+        Integer userId = ((MyUserDetailService.UserPrincipal)token.getPrincipal()).getUser().getId();
+
+        return userId;
+    }
+
     @GetMapping(value = "/books")
-    public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status) {
-        Integer userConnectedId = this.getUserConnectedId();
+    public ResponseEntity listBooks(@RequestParam(required = false) BookStatus status, Principal principal) {
+        Integer userConnectedId = this.getUserConnectedId(principal);
         List<Book> books;
         if (status != null && status == BookStatus.FREE) {
             books = bookRepository.findByStatusAndUserIdNotAndDeletedFalse(status, userConnectedId);
@@ -45,13 +59,10 @@ public class BookController {
         return new ResponseEntity(books, HttpStatus.OK);
     }
 
-    public static Integer getUserConnectedId() {
-        return 1;
-    }
 
     @PostMapping(value = "/books")
-    public ResponseEntity addBook(@RequestBody @Valid Book book) {
-        Integer userConnectedId = this.getUserConnectedId();
+    public ResponseEntity addBook(@RequestBody @Valid Book book, Principal principal) {
+        Integer userConnectedId = this.getUserConnectedId(principal);
         Optional<User> user = userRepository.findById(userConnectedId);
         Optional<Category> category = categoryRepository.findById(book.getCategoryId());
         if (category.isPresent()) {
@@ -71,7 +82,8 @@ public class BookController {
     }
 
     @DeleteMapping(value = "/books/{bookId}")
-    public ResponseEntity deleteBook(@PathVariable("bookId") String bookId) {
+    public ResponseEntity deleteBook(@PathVariable("bookId") String bookId, Principal principal) {
+        Integer userConnectedId = this.getUserConnectedId(principal);
         Optional<Book> bookToDelete = bookRepository.findById(Integer.valueOf(bookId));
 
         if (!bookToDelete.isPresent()) {

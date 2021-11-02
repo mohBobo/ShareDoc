@@ -8,11 +8,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Service
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
@@ -20,9 +22,9 @@ public class MyUserDetailService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String login = null;
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         List<User> users = userRepository.findByEmail(login);
+
         if (users.isEmpty()) {
             throw new UsernameNotFoundException(login);
         }
@@ -30,6 +32,7 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
     public static class UserPrincipal implements UserDetails {
+
         private User user;
 
         public UserPrincipal(User user) {
