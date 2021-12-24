@@ -12,5 +12,4 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
 
     List<Book> findByStatusAndUserIdNotAndDeletedFalse(BookStatus status, Integer userId);
     List<Book> findByUserIdAndDeletedFalse(Integer userId);
-
 }

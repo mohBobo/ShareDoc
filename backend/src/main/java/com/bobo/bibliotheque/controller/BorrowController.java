@@ -58,9 +58,7 @@ public class BorrowController {
             return new ResponseEntity(HttpStatus.CREATED);
 
         }
-
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
     }
 
     @DeleteMapping("/borrows/{borrowId}")

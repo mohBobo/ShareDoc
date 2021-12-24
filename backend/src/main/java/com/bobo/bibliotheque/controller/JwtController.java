@@ -46,6 +46,7 @@ public class JwtController {
         ));
     }
 
+    // Cette méthode va tenter de se connecter avec spring security
     private void authenticate(String email, String password) {
         this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }

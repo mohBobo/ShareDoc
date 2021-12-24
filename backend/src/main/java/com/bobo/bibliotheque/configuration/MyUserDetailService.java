@@ -26,7 +26,7 @@ public class MyUserDetailService implements UserDetailsService {
         List<User> users = userRepository.findByEmail(login);
 
         if (users.isEmpty()) {
-            throw new UsernameNotFoundException(login);
+            throw new UsernameNotFoundException("le login"+ login +"n'est pas le bon");
         }
         return new UserPrincipal(users.get(0));
     }

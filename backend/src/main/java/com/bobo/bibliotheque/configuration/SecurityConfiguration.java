@@ -73,12 +73,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(service).passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder
+                .userDetailsService(service)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+        //return new Argon2PasswordEncoder();
     }
 
     @Bean
