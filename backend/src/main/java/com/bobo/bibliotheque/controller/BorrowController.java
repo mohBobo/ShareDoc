@@ -44,9 +44,11 @@ public class BorrowController {
         Optional<User> borrower = userRepository.findById(Integer.valueOf(userConnectedId));
         Optional<Book> book = bookRepository.findById(Integer.valueOf(bookId));
 
+        Optional<Borrow> borrowExist = borrowRepository.findById(Integer.valueOf(userConnectedId));
+
         if(borrower.isPresent() && book.isPresent()) {
 
-            Borrow borrow = new Borrow();
+            Borrow borrow = borrowExist.get();
             borrow.setBook(book.get());
             borrow.setBorrower(borrower.get());
             borrow.setLender(book.get().getUser());
@@ -58,9 +60,7 @@ public class BorrowController {
             return new ResponseEntity(HttpStatus.CREATED);
 
         }
-
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
     }
 
     @DeleteMapping("/borrows/{borrowId}")

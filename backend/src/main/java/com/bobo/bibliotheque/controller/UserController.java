@@ -32,7 +32,7 @@ public class UserController {
 
         List<User> users = userRepository.findByEmail(user.getEmail());
 
-        if(!users.isEmpty()) {
+        if (!users.isEmpty()) {
             return new ResponseEntity("User already existing", HttpStatus.BAD_REQUEST);
         }
 

@@ -24,7 +24,8 @@ public class JwtUtils {
     public String generateToken(MyUserDetailService.UserPrincipal principal) {
         Map<String, Object> claims = new HashMap<>();
 
-        return Jwts.builder().setClaims(claims).setSubject(principal.getUsername()).setIssuedAt(new Date(System.currentTimeMillis()))
+        return Jwts.builder().setClaims(claims).setSubject(principal.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
