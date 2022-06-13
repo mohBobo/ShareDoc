@@ -44,9 +44,11 @@ public class BorrowController {
         Optional<User> borrower = userRepository.findById(Integer.valueOf(userConnectedId));
         Optional<Book> book = bookRepository.findById(Integer.valueOf(bookId));
 
+        Optional<Borrow> borrowExist = borrowRepository.findById(Integer.valueOf(userConnectedId));
+
         if(borrower.isPresent() && book.isPresent()) {
 
-            Borrow borrow = new Borrow();
+            Borrow borrow = borrowExist.get();
             borrow.setBook(book.get());
             borrow.setBorrower(borrower.get());
             borrow.setLender(book.get().getUser());

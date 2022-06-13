@@ -1,13 +1,18 @@
 package com.bobo.bibliotheque.entities;
 
 import com.bobo.bibliotheque.enumerer.BookStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @Id
